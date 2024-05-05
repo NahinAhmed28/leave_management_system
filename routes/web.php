@@ -30,7 +30,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 
-Route::middleware(['auth', 'employee'])->group(function () {
+//Route::middleware(['auth', 'employee'])->group(function () {
     // Route for employee dashboard
     Route::get('/employee/dashboard', [EmployeeDashboardController::class, 'index'])->name('employee.dashboard');
 
@@ -44,9 +44,9 @@ Route::middleware(['auth', 'employee'])->group(function () {
     // Route for listing leave requests
     Route::get('/leave-requests', [LeaveRequestController::class, 'index'])
         ->name('leave_requests.index');
-});
+//});
 
-Route::middleware(['auth', 'admin'])->group(function () {
+//Route::middleware(['auth', 'admin'])->group(function () {
     // Resource routes for RoleController
     Route::resource('roles', RoleController::class);
 
@@ -55,7 +55,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Route for admin dashboard
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-});
+//});
 
 
 

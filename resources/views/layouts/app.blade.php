@@ -1,80 +1,130 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{{asset('frontend/assets/img/titleLogo.png')}}" rel="icon">
+    <link href="{{asset('frontend/assets/img/titleLogo.png')}}" rel="apple-touch-icon">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('layouts.common.header')
+    @stack('styles')
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <style>
+        .dropdown-menu.show{
+            min-width: auto !important;
+        }
+    </style>
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+{{--@include('sweetalert::alert')--}}
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+<div class="m-grid m-grid--hor m-grid--root m-page">
 
-                    </ul>
+    @include('layouts.common.topbar')
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
+        <!-- BEGIN: Left Aside -->
+        @include('layouts.common.sidebar')
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+            <div class="m-content">
+
+                @yield('content')
+
             </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+        </div>
     </div>
+
+    <!-- end:: Body -->
+
+    @include('layouts.common.footer')
+
+</div>
+
+<!-- begin::Scroll Top -->
+<div id="m_scroll_top" class="m-scroll-top">
+    <i class="la la-arrow-up"></i>
+</div>
+
+<!-- end::Scroll Top -->
+
+<!--begin::Global Theme Bundle -->
+<script src="{{asset('assets/global/scripts/vendors.bundle.js')}}" type="text/javascript"></script>
+<script src="{{asset('assets/global/scripts/scripts.bundle.js')}}" type="text/javascript"></script>
+
+<script src="{{ asset('assets/global/scripts/custom.js') }}" type="text/javascript"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" type="text/javascript"></script>
+
+<!--end::Global Theme Bundle -->
+
+<script>
+    var baseUrl = '{!! url('/') !!}/';
+    $(".summernote").on("summernote.change", function (e) {
+        $('.note-editing-area table').css({'border': '1px solid rgb(148 147 151)', 'border-spacing':'0'});
+        $('.note-editing-area table td').css({'border': '1px solid rgb(148 147 151)', 'border-spacing':'0'});
+    });
+
+</script>
+
+@stack('scripts')
+
+<script>
+
+    $(".m_selectpicker").selectpicker();
+
+    jQuery.validator.addMethod("email_not_required", function(value, element) {
+
+        if (value.length > 0){
+            if (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value)) {
+                return true;
+            } else {
+                return false;
+            }
+        }else{
+            return true;
+        }
+
+    }, "Please enter a valid Email.");
+
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value.indexOf(" ") < 0 && value != "";
+    }, "No space please and don't leave it empty");
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "3000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    @if(Session::has('success'))
+        Command: toastr["success"]("{{ Session::get('success') }}", "Success");
+    @endif
+            @if(Session::has('error'))
+        Command: toastr["error"]("{{ Session::get('error') }}", "Error!");
+    @endif
+</script>
+
+
+
 </body>
 </html>
